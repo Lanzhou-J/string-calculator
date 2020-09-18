@@ -28,10 +28,20 @@ namespace string_calculator.Tests
         [Theory]
         [InlineData("1,2", 3)]
         [InlineData("3,5", 8)]
-        public void ReturnSumBasedOnTwoInputStrings(string input, int expectedResult)
+        [InlineData("1,2,3", 6)]
+        [InlineData("3,5,3,9", 20)]
+        [InlineData("1,2\n3", 6)]
+        public void ReturnSumBasedOnNInputStringsWithEitherCommaOrLineBreakSeparator(string input, int expectedResult)
         {
             var calculator = new StringCalculator();
             Assert.Equal(expectedResult,calculator.Add(input));
+        }
+
+        [Fact]
+        public void ReturnFormatExceptionOnCommaInputString()
+        {
+            var calculator = new StringCalculator();
+            Assert.Throws<FormatException>(() => calculator.Add(","));
         }
         
     }

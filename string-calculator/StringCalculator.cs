@@ -12,23 +12,44 @@ namespace string_calculator
             {
                 return 0;
             }
-            else if (input.Contains(","))
+            
+            List<string> inputList = new List<string>();
+            inputList.Add(input);
+
+            var commaSeparateList = SeparateNumberStringToCreateANumberList(inputList, ",");
+            var lineBreakSeparateList = SeparateNumberStringToCreateANumberList(commaSeparateList, "\n");
+            
+            List<int> newNumberList = new List<int>();
+            foreach (var numberWord in lineBreakSeparateList)
             {
-                var newArray = input.Split(',', StringSplitOptions.None);
-                 List<int> numberArray = new List<int>();
-                foreach (var item in newArray)
+                Console.WriteLine(numberWord);
+                newNumberList.Add(int.Parse(numberWord));
+            }
+
+            return newNumberList.Sum();
+        }
+
+        public List<string> SeparateNumberStringToCreateANumberList(List<string> inputString, string separator)
+        {
+            List<string> newStringList = new List<string>();
+            foreach (var item in inputString)
+            {
+                if (item.Contains(separator))
                 {
-                    numberArray.Add(int.Parse(item));
+                    var newArray = item.Split(separator, StringSplitOptions.None);
+                
+                    foreach (var word in newArray)
+                    {
+                        newStringList.Add(word);
+                    }
                 }
-
-                return numberArray.Sum();
+                else
+                {
+                    newStringList.Add(item);
+                }
             }
-            else
-            {
-                return int.Parse(input);
-            }
-
-
+            return newStringList;
         }
     }
 }
+

@@ -6,7 +6,8 @@ namespace string_calculator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            StringCalculator newCalculator = new StringCalculator();
+            newCalculator.Add("1,2");
         }
     }
 }
