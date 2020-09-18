@@ -31,7 +31,8 @@ namespace string_calculator.Tests
         [InlineData("1,2,3", 6)]
         [InlineData("3,5,3,9", 20)]
         [InlineData("1,2\n3", 6)]
-        public void ReturnSumBasedOnNInputStringsWithEitherCommaOrLineBreakSeparator(string input, int expectedResult)
+        [InlineData("3\n5\n3,9", 20)]
+        public void ReturnSumBasedOnNInputStringsWithEitherCommaOrLineBreakDelimiter(string input, int expectedResult)
         {
             var calculator = new StringCalculator();
             Assert.Equal(expectedResult,calculator.Add(input));
@@ -42,6 +43,16 @@ namespace string_calculator.Tests
         {
             var calculator = new StringCalculator();
             Assert.Throws<FormatException>(() => calculator.Add(","));
+        }
+        
+        //Add("//;\n1;2") > Returns 3  
+        [Theory]
+        [InlineData(@"//;\n1;2", 3)]
+        public void ReturnCorrectSumWhileSupportingDifferentDelimiters(string input, int expectedResult)
+        {
+            var calculator = new StringCalculator();
+            Assert.Equal(expectedResult,calculator.Add(input));
+            
         }
         
     }
