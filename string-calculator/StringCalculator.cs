@@ -9,14 +9,28 @@ namespace string_calculator
     {
         public int Add(string input)
         {
+            char delimiter = ',';
+            string changeDelimiterPattern = @"^\/\/(.+)?(\n|\r|\n\r)";
+            if (Regex.IsMatch(input, changeDelimiterPattern))
+            {
+            }
+
+            return SplitMultipleNumberStringToCalculateSum(delimiter, input);
+        }
+
+        public int SplitMultipleNumberStringToCalculateSum(char delimiter, string input)
+        {
+            char lineBreak = '\n';
+            
+            string delimiterPattern = $@"{delimiter}|\r|\n|\r\n";
             string singleNumberPattern = @"^(\d+)$";
-            string multipleNumberPattern = @"^((\d+,)+){0,1}(\d+)$";
+            string multipleNumberPattern = $@"^(((\d+)({delimiterPattern}))+){{0,1}}(\d+)$";
             if (Regex.IsMatch(input, singleNumberPattern))
             {
                 return int.Parse(input);
             }else if(Regex.IsMatch(input, multipleNumberPattern))
             {
-                var newArray = input.Split(",", StringSplitOptions.None);
+                var newArray = input.Split(new Char [] {delimiter , lineBreak }, StringSplitOptions.None);
                 var newNumberList = new List<int>();
                 foreach (var word in newArray)
                 {
@@ -28,29 +42,6 @@ namespace string_calculator
 
             return 0;
         }
-
-
-        // public List<string> SeparateNumberStringToCreateANumberList(List<string> inputString, string delimiter)
-        // {
-        //     List<string> newStringList = new List<string>();
-        //     foreach (var item in inputString)
-        //     {
-        //         if (item.Contains(delimiter))
-        //         {
-        //             var newArray = item.Split(delimiter, StringSplitOptions.None);
-        //         
-        //             foreach (var word in newArray)
-        //             {
-        //                 newStringList.Add(word);
-        //             }
-        //         }
-        //         else
-        //         {
-        //             newStringList.Add(item);
-        //         }
-        //     }
-        //     return newStringList;
-        // }
     }
 }
 
