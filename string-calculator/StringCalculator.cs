@@ -9,20 +9,29 @@ namespace string_calculator
     {
         public int Add(string input)
         {
-            char delimiter = ',';
-            string changeDelimiterPattern = @"^\/\/(.+)?(\n|\r|\n\r)";
+            string delimiter;
+            string changeDelimiterPattern = @"^\/\/(.+?)(\n)";
             if (Regex.IsMatch(input, changeDelimiterPattern))
             {
+                var newArray = input.Split(new[] {'\n'});
+                var line1 = newArray[0];
+                string restOfInput = newArray[1];
+                delimiter = line1.Substring(2);
+                input = restOfInput;
+            }
+            else
+            {
+                delimiter = ",";
             }
 
             return SplitMultipleNumberStringToCalculateSum(delimiter, input);
         }
 
-        public int SplitMultipleNumberStringToCalculateSum(char delimiter, string input)
+        public int SplitMultipleNumberStringToCalculateSum(string delimiter, string input)
         {
-            char lineBreak = '\n';
+            string lineBreak = "\n";
             
-            string delimiterPattern = $@"{delimiter}|\r|\n|\r\n";
+            string delimiterPattern = $@"{delimiter}|\n";
             string singleNumberPattern = @"^(\d+)$";
             string multipleNumberPattern = $@"^(((\d+)({delimiterPattern}))+){{0,1}}(\d+)$";
             if (Regex.IsMatch(input, singleNumberPattern))
@@ -30,7 +39,7 @@ namespace string_calculator
                 return int.Parse(input);
             }else if(Regex.IsMatch(input, multipleNumberPattern))
             {
-                var newArray = input.Split(new Char [] {delimiter , lineBreak }, StringSplitOptions.None);
+                var newArray = input.Split(new String [] {delimiter , lineBreak }, StringSplitOptions.None);
                 var newNumberList = new List<int>();
                 foreach (var word in newArray)
                 {

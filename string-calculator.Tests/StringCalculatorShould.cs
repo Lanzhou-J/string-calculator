@@ -47,7 +47,7 @@ namespace string_calculator.Tests
         
         //Add("//;\n1;2") > Returns 3  
         [Theory]
-        [InlineData(@"//;\n1;2", 3)]
+        [InlineData("//;\n1;2", 3)]
         public void ReturnCorrectSumWhileSupportingDifferentDelimiters(string input, int expectedResult)
         {
             var calculator = new StringCalculator();
