@@ -10,7 +10,7 @@ namespace string_calculator
         public int Add(string input)
         {
             string singleNumberPattern = @"^(\d+)$";
-            string multipleNumberPattern = @"^(\d+),((\d+,)+){0,1}(\d+)$";
+            string multipleNumberPattern = @"^((\d+,)+){0,1}(\d+)$";
             if (Regex.IsMatch(input, singleNumberPattern))
             {
                 return int.Parse(input);
@@ -30,27 +30,27 @@ namespace string_calculator
         }
 
 
-        public List<string> SeparateNumberStringToCreateANumberList(List<string> inputString, string delimiter)
-        {
-            List<string> newStringList = new List<string>();
-            foreach (var item in inputString)
-            {
-                if (item.Contains(delimiter))
-                {
-                    var newArray = item.Split(delimiter, StringSplitOptions.None);
-                
-                    foreach (var word in newArray)
-                    {
-                        newStringList.Add(word);
-                    }
-                }
-                else
-                {
-                    newStringList.Add(item);
-                }
-            }
-            return newStringList;
-        }
+        // public List<string> SeparateNumberStringToCreateANumberList(List<string> inputString, string delimiter)
+        // {
+        //     List<string> newStringList = new List<string>();
+        //     foreach (var item in inputString)
+        //     {
+        //         if (item.Contains(delimiter))
+        //         {
+        //             var newArray = item.Split(delimiter, StringSplitOptions.None);
+        //         
+        //             foreach (var word in newArray)
+        //             {
+        //                 newStringList.Add(word);
+        //             }
+        //         }
+        //         else
+        //         {
+        //             newStringList.Add(item);
+        //         }
+        //     }
+        //     return newStringList;
+        // }
     }
 }
 
