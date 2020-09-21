@@ -10,12 +10,11 @@ namespace string_calculator
         public int Add(string input)
         {
             string singleNumberPattern = @"^(\d+)$";
-            string doubleNumberPattern = @"^(\d+),(\d+)$";
-            string multipleNumberPattern = @"^(\d+),((\d+,)+)(\d+)$";
+            string multipleNumberPattern = @"^(\d+),((\d+,)+){0,1}(\d+)$";
             if (Regex.IsMatch(input, singleNumberPattern))
             {
                 return int.Parse(input);
-            }else if(Regex.IsMatch(input, doubleNumberPattern)|Regex.IsMatch(input, multipleNumberPattern))
+            }else if(Regex.IsMatch(input, multipleNumberPattern))
             {
                 var newArray = input.Split(",", StringSplitOptions.None);
                 var newNumberList = new List<int>();
