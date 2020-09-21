@@ -37,13 +37,7 @@ namespace string_calculator.Tests
             var calculator = new StringCalculator();
             Assert.Equal(expectedResult,calculator.Add(input));
         }
-
-        [Fact]
-        public void ReturnFormatExceptionOnCommaInputString()
-        {
-            var calculator = new StringCalculator();
-            Assert.Throws<FormatException>(() => calculator.Add(","));
-        }
+        
         
         //Add("//;\n1;2") > Returns 3  
         [Theory]
@@ -52,8 +46,8 @@ namespace string_calculator.Tests
         {
             var calculator = new StringCalculator();
             Assert.Equal(expectedResult,calculator.Add(input));
-            
         }
+        
         
     }
 }
