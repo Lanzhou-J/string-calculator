@@ -11,10 +11,11 @@ namespace string_calculator
         {
             string singleNumberPattern = @"^(\d+)$";
             string doubleNumberPattern = @"^(\d+),(\d+)$";
+            string multipleNumberPattern = @"^(\d+),((\d+,)+)(\d+)$";
             if (Regex.IsMatch(input, singleNumberPattern))
             {
                 return int.Parse(input);
-            }else if(Regex.IsMatch(input, doubleNumberPattern))
+            }else if(Regex.IsMatch(input, doubleNumberPattern)|Regex.IsMatch(input, multipleNumberPattern))
             {
                 var newArray = input.Split(",", StringSplitOptions.None);
                 var newNumberList = new List<int>();
@@ -29,36 +30,6 @@ namespace string_calculator
             return 0;
         }
 
-            
-
-            //
-            // string delimiter=",";
-            // if (input.Contains("//"))
-            // {
-            //     int indexOfSeparateLine = input.LastIndexOf("/");
-            //     int indexOfLineBreak = input.IndexOf(@"\");
-            //     int substringLength = indexOfLineBreak - indexOfSeparateLine-1;
-            //     delimiter = input.Substring(indexOfSeparateLine+1, substringLength);
-            // }
-            // int indexOfN = input.IndexOf("n");
-            // string inputString = input.Substring(indexOfN + 1);
-            //
-            // List<string> inputList = new List<string>();
-            // inputList.Add(inputString);
-            //
-            //
-            // var commaSeparateList = SeparateNumberStringToCreateANumberList(inputList, delimiter);
-            // var lineBreakSeparateList = SeparateNumberStringToCreateANumberList(commaSeparateList, "\n");
-            //
-            // List<int> newNumberList = new List<int>();
-            // foreach (var numberWord in lineBreakSeparateList)
-            // {
-            //     Console.WriteLine(numberWord);
-            //     newNumberList.Add(int.Parse(numberWord));
-            // }
-            //
-            // return newNumberList.Sum();
-        
 
         public List<string> SeparateNumberStringToCreateANumberList(List<string> inputString, string delimiter)
         {
