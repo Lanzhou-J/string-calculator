@@ -38,15 +38,7 @@ namespace string_calculator.Tests
             Assert.Equal(expectedResult,calculator.Add(input));
         }
 
-        [Fact]
-        public void ReturnCorrectMessage_WhenAddingANegativeNumber()
-        {
-            var calculator = new StringCalculator();
- 
-            var ex = Assert.Throws<Exception>(() => calculator.Add("-1,2,-3"));
- 
-            Assert.Equal("Negatives not allowed: -1, -3", ex.Message);
-        }
+
         
         //Add("//;\n1;2") > Returns 3  
         [Theory]
@@ -57,6 +49,24 @@ namespace string_calculator.Tests
             Assert.Equal(expectedResult,calculator.Add(input));
         }
         
+        [Fact]
+        public void ReturnCorrectMessage_WhenAddingANegativeNumber()
+        {
+            var calculator = new StringCalculator();
+ 
+            var ex = Assert.Throws<Exception>(() => calculator.Add("-1,2,-3"));
+ 
+            Assert.Equal("Negatives not allowed: -1, -3", ex.Message);
+        }
         
+        [Fact]
+        public void NumbersGreaterOrEqualToAThousandShouldBeIgnored()
+        {
+            var calculator = new StringCalculator();
+ 
+            var result = calculator.Add("1000,1001,2");
+ 
+            Assert.Equal(2, result);
+        }
     }
 }

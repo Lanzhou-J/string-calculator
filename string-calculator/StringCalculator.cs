@@ -56,9 +56,14 @@ namespace string_calculator
             {
                 var newArray = input.Split(new String [] {delimiter , lineBreak }, StringSplitOptions.None);
                 var newNumberList = new List<int>();
+                int wordNumber;
                 foreach (var word in newArray)
                 {
-                    newNumberList.Add(int.Parse(word));
+                    wordNumber = int.Parse(word);
+                    if (wordNumber<1000)
+                    {
+                        newNumberList.Add(wordNumber);
+                    }
                 }
 
                 return newNumberList.Sum();
