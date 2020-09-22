@@ -34,14 +34,19 @@ namespace string_calculator
             string delimiterPattern = $@"{delimiter}|\n";
             string singleNumberPattern = @"^(\d+)$";
             string multipleNumberPattern = $@"^(((\d+)({delimiterPattern}))+){{0,1}}(\d+)$";
-            string NegativeValuePattern = @"^-(\d+)";
+            string NegativeValuePattern = @"-(\d+)";
             
             string errorMessage = "Negatives not allowed:";
-
+            List<Match> negativeNumberList = new List<Match>();
             foreach (Match match in Regex.Matches(input, NegativeValuePattern))
             {
-                errorMessage += match;
-                throw new Exception(errorMessage);
+                negativeNumberList.Add(match);
+            }
+
+            if (negativeNumberList.Count >= 1)
+            {
+                string joined = string.Join(", ", negativeNumberList);
+                throw new Exception(errorMessage+" "+joined);
             }
 
             if (Regex.IsMatch(input, singleNumberPattern))
