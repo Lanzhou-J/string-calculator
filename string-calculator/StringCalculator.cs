@@ -30,10 +30,20 @@ namespace string_calculator
         public int SplitMultipleNumberStringToCalculateSum(string delimiter, string input)
         {
             string lineBreak = "\n";
-            
+
             string delimiterPattern = $@"{delimiter}|\n";
             string singleNumberPattern = @"^(\d+)$";
             string multipleNumberPattern = $@"^(((\d+)({delimiterPattern}))+){{0,1}}(\d+)$";
+            string NegativeValuePattern = @"^-(\d+)";
+            
+            string errorMessage = "Negatives not allowed:";
+
+            foreach (Match match in Regex.Matches(input, NegativeValuePattern))
+            {
+                errorMessage += match;
+                throw new Exception(errorMessage);
+            }
+
             if (Regex.IsMatch(input, singleNumberPattern))
             {
                 return int.Parse(input);

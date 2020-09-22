@@ -37,7 +37,16 @@ namespace string_calculator.Tests
             var calculator = new StringCalculator();
             Assert.Equal(expectedResult,calculator.Add(input));
         }
-        
+
+        [Fact]
+        public void ReturnCorrectMessage_WhenAddingANegativeNumber()
+        {
+            var calculator = new StringCalculator();
+ 
+            var ex = Assert.Throws<Exception>(() => calculator.Add("-1,2,-3"));
+ 
+            Assert.Equal("Negatives not allowed: -1, -3", ex.Message);
+        }
         
         //Add("//;\n1;2") > Returns 3  
         [Theory]
