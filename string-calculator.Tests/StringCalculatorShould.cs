@@ -68,5 +68,25 @@ namespace string_calculator.Tests
  
             Assert.Equal(2, result);
         }
+        
+        [Fact]
+        public void ReturnCorrectSum_WhenDelimitersAreInSquareBrackets()
+        {
+            var calculator = new StringCalculator();
+ 
+            var result = calculator.Add("//[,,]\n1,,2,,3");
+ 
+            Assert.Equal(6, result);
+        }
+        
+        [Fact]
+        public void ReturnCorrectSum_WhenDelimitersContainStarSign()
+        {
+            var calculator = new StringCalculator();
+ 
+            var result = calculator.Add("//[***]\n1***2***3");
+ 
+            Assert.Equal(6, result);
+        }
     }
 }
