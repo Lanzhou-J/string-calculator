@@ -7,7 +7,7 @@ namespace string_calculator
         static void Main(string[] args)
         {
             StringCalculator newCalculator = new StringCalculator();
-            newCalculator.Add("1,2");
+            StringCalculator.Add("1,2");
         }
     }
 }

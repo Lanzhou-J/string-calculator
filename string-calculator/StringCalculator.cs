@@ -9,38 +9,85 @@ namespace string_calculator
     {
         private const string CustomDelimiterPattern = @"^\/\/(\D+?)(\n)";
         private const string DelimiterPatternOfAnyLength = @"^\/\/(\[)(\D+?)(\])(\n)";
-        public int Add(string input)
+        private const string SingleNumberPattern = @"^(\d+)$";
+        private const string NegativeValuePattern = @"-(\d+)";
+        private const string ErrorMessage = "Negatives not allowed:";
+        private const string LineBreak = "\n";
+        
+        public static int Add(string input)
         {
             string delimiter;
             var stringNumbers = input;
-            string customDelimiterMarker;
-            
-            if (Regex.IsMatch(input, DelimiterPatternOfAnyLength))
+
+            // Input: "//[***]\n1***2***3"
+            if (InputMatchesDelimiterPatternOfAnyLengthPattern(input))
             {
-                var delimiterAndStringNumbers = input.Split(new[] {'\n'});
-                customDelimiterMarker = delimiterAndStringNumbers[0];
-                stringNumbers = delimiterAndStringNumbers[1];
-                var delimiterWithSquareBrackets = customDelimiterMarker.Substring(2);
-                delimiter = delimiterWithSquareBrackets.Substring(1, delimiterWithSquareBrackets.Length - 2);
+                delimiter = GetDelimiterForDelimiterPatternOfAnyLength(input); // ***
+                stringNumbers = GetStringNumbersForDelimiterPatternOfAnyLength(input);// 1***2***3
             }
-            else if (Regex.IsMatch(input, CustomDelimiterPattern)) 
+            else if (InputMatchesCustomDelimiterPattern(input))
             {
-                var newArray = input.Split(new[] {'\n'});
-                customDelimiterMarker = newArray[0];
-                stringNumbers = newArray[1];
-                delimiter = customDelimiterMarker.Substring(2);
+                var delimiterAndStringNumbers = GetDelimiterAndStringNumbersForCustomDelimiterPattern(input);
+                delimiter = GetDelimiterForCustomDelimiterPattern(delimiterAndStringNumbers);
+                stringNumbers = GetStringNumbersForCustomDelimiterPattern(delimiterAndStringNumbers);
             }
             else
             {
                 delimiter = ",";
             }
-
-            return SplitMultipleNumberStringToCalculateSum(delimiter, stringNumbers);
+            var sum = SplitMultipleStringNumbersToCalculateSum(delimiter, stringNumbers);
+            return sum;
         }
 
-        private static int SplitMultipleNumberStringToCalculateSum(string delimiter, string input)
+        private static string[] GetDelimiterAndStringNumbersForCustomDelimiterPattern(string input)
         {
-            const string lineBreak = "\n";
+           return input.Split(new[] {'\n'});
+        }
+
+        private static string GetDelimiterForCustomDelimiterPattern( string[] delimiterAndStringNumbers)
+        {
+            return delimiterAndStringNumbers[0].Substring(2);
+        }
+        
+        private static string GetStringNumbersForCustomDelimiterPattern( string[] delimiterAndStringNumbers)
+        {
+            return delimiterAndStringNumbers[1];
+        }
+
+        private static bool InputMatchesCustomDelimiterPattern(string input)
+        {
+            return Regex.IsMatch(input, CustomDelimiterPattern);
+        }
+
+        private static bool InputMatchesDelimiterPatternOfAnyLengthPattern(string input)
+        {
+            return Regex.IsMatch(input, DelimiterPatternOfAnyLength);
+        }
+
+        private static string GetDelimiterForDelimiterPatternOfAnyLength(string input)
+        {
+            
+            var customDelimiterMarker = GetDelimiterAndStringNumbers(input)[0];
+            var delimiterWithSquareBrackets = customDelimiterMarker.Substring(2);
+            var delimiter = delimiterWithSquareBrackets.Substring(1, delimiterWithSquareBrackets.Length - 2);
+            return delimiter;
+        }
+        
+        private static string GetStringNumbersForDelimiterPatternOfAnyLength(string input)
+        {
+            
+            var stringNumbers = GetDelimiterAndStringNumbers(input)[1];
+            return stringNumbers;
+        }
+
+        private static string[] GetDelimiterAndStringNumbers(string input)
+        {
+            return input.Split(new[] {'\n'});
+        }
+
+        private static int SplitMultipleStringNumbersToCalculateSum(string delimiter, string stringNumber)
+        {
+            
             var newDelimiter = delimiter;
 
             if (delimiter.Contains("*"))
@@ -49,44 +96,45 @@ namespace string_calculator
             }
 
             var delimiterPattern = $@"{newDelimiter}|\n";
-            const string singleNumberPattern = @"^(\d+)$";
-            var multipleNumberPattern = $@"^(((\d+)({delimiterPattern}))+){{0,1}}(\d+)$";
-            const string negativeValuePattern = @"-(\d+)";
             
-            const string errorMessage = "Negatives not allowed:";
+            var multipleNumberPattern = $@"^(((\d+)({delimiterPattern}))+){{0,1}}(\d+)$";
+            
+            CheckNegativeNumbers(stringNumber);
+
+            if (Regex.IsMatch(stringNumber, SingleNumberPattern))
+            {
+                return int.Parse(stringNumber);
+            }
+            else if(Regex.IsMatch(stringNumber, multipleNumberPattern))
+            {
+                var stringNumberArray = stringNumber.Split(new[] {delimiter , LineBreak }, StringSplitOptions.None);
+                var numbers = new List<int>();
+                foreach (var item in stringNumberArray)
+                {
+                    var number = int.Parse(item);
+                    if (number<1000)
+                    {
+                        numbers.Add(number);
+                    }
+                }
+
+                return numbers.Sum();
+            }
+
+            return 0;
+        }
+
+        private static void CheckNegativeNumbers(string stringNumber)
+        {
             var negativeNumberList = new List<Match>();
-            foreach (Match match in Regex.Matches(input, negativeValuePattern))
+            foreach (Match match in Regex.Matches(stringNumber, NegativeValuePattern))
             {
                 negativeNumberList.Add(match);
             }
 
-            if (negativeNumberList.Count >= 1)
-            {
-                var joined = string.Join(", ", negativeNumberList);
-                throw new Exception(errorMessage+" "+joined);
-            }
-
-            if (Regex.IsMatch(input, singleNumberPattern))
-            {
-                return int.Parse(input);
-            }
-            else if(Regex.IsMatch(input, multipleNumberPattern))
-            {
-                var newArray = input.Split(new[] {delimiter , lineBreak }, StringSplitOptions.None);
-                var newNumberList = new List<int>();
-                foreach (var word in newArray)
-                {
-                    var wordNumber = int.Parse(word);
-                    if (wordNumber<1000)
-                    {
-                        newNumberList.Add(wordNumber);
-                    }
-                }
-
-                return newNumberList.Sum();
-            }
-
-            return 0;
+            if (negativeNumberList.Count < 1) return;
+            var joined = string.Join(", ", negativeNumberList);
+            throw new Exception(ErrorMessage + " " + joined);
         }
     }
 }

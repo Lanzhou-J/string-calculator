@@ -9,7 +9,7 @@ namespace string_calculator.Tests
         public void ReturnZeroFromEmptyString()
         {
             var calculator = new StringCalculator();
-            Assert.Equal(0,calculator.Add(""));
+            Assert.Equal(0,StringCalculator.Add(""));
         }
         
         [Theory]
@@ -18,13 +18,9 @@ namespace string_calculator.Tests
         public void ReturnNumberCorrespondingToInputString(string input, int expectedResult)
         {
             var calculator = new StringCalculator();
-            Assert.Equal(expectedResult,calculator.Add(input));
+            Assert.Equal(expectedResult,StringCalculator.Add(input));
         }
-        
-        
-        // Add("1,2") > Returns 3
-        // Add("3,5") > Returns 8
-        
+
         [Theory]
         [InlineData("1,2", 3)]
         [InlineData("3,5", 8)]
@@ -35,18 +31,15 @@ namespace string_calculator.Tests
         public void ReturnSumBasedOnNInputStringsWithEitherCommaOrLineBreakDelimiter(string input, int expectedResult)
         {
             var calculator = new StringCalculator();
-            Assert.Equal(expectedResult,calculator.Add(input));
+            Assert.Equal(expectedResult,StringCalculator.Add(input));
         }
-
-
         
-        //Add("//;\n1;2") > Returns 3  
         [Theory]
         [InlineData("//;\n1;2", 3)]
         public void ReturnCorrectSumWhileSupportingDifferentDelimiters(string input, int expectedResult)
         {
             var calculator = new StringCalculator();
-            Assert.Equal(expectedResult,calculator.Add(input));
+            Assert.Equal(expectedResult,StringCalculator.Add(input));
         }
         
         [Fact]
@@ -54,7 +47,7 @@ namespace string_calculator.Tests
         {
             var calculator = new StringCalculator();
  
-            var ex = Assert.Throws<Exception>(() => calculator.Add("-1,2,-3"));
+            var ex = Assert.Throws<Exception>(() => StringCalculator.Add("-1,2,-3"));
  
             Assert.Equal("Negatives not allowed: -1, -3", ex.Message);
         }
@@ -64,7 +57,7 @@ namespace string_calculator.Tests
         {
             var calculator = new StringCalculator();
  
-            var result = calculator.Add("1000,1001,2");
+            var result = StringCalculator.Add("1000,1001,2");
  
             Assert.Equal(2, result);
         }
@@ -74,7 +67,7 @@ namespace string_calculator.Tests
         {
             var calculator = new StringCalculator();
  
-            var result = calculator.Add("//[,,]\n1,,2,,3");
+            var result = StringCalculator.Add("//[,,]\n1,,2,,3");
  
             Assert.Equal(6, result);
         }
@@ -84,19 +77,35 @@ namespace string_calculator.Tests
         {
             var calculator = new StringCalculator();
  
-            var result = calculator.Add("//[***]\n1***2***3");
+            var result = StringCalculator.Add("//[***]\n1***2***3");
  
             Assert.Equal(6, result);
         }
         
-        [Fact]
-        public void ReturnCorrectSum_WhenThereAreMultipleDelimiters()
+        [Theory]
+        [InlineData("//[***]\n1***2***3", 6)]
+        [InlineData("//[,,,]\n1,,,2,,,3", 6)]
+        [InlineData("//[@@@]\n1@@@2@@@3", 6)]
+        [InlineData("//[###]\n1###2###3", 6)]
+        // [InlineData("//[$$$$$]\n1$$$$$2$$$$$3", 6)]
+        
+        public void ReturnCorrectSum_WhenDelimitersContainMultipleSymbols(string input, int expectedOutput)
         {
             var calculator = new StringCalculator();
  
-            var result = calculator.Add("//[*][%]\n1*2%3");
+            var result = StringCalculator.Add(input);
  
-            Assert.Equal(6, result);
+            Assert.Equal(expectedOutput, result);
         }
+        
+        // [Fact]
+        // public void ReturnCorrectSum_WhenThereAreMultipleDelimiters()
+        // {
+        //     var calculator = new StringCalculator();
+        //
+        //     var result = calculator.Add("//[*][%]\n1*2%3");
+        //
+        //     Assert.Equal(6, result);
+        // }
     }
 }
