@@ -16,7 +16,7 @@ namespace string_calculator
         
         public static int Add(string input)
         {
-            string delimiter;
+            string delimiter = ",";
             var stringNumbers = input;
 
             // Input: "//[***]\n1***2***3"
@@ -30,10 +30,6 @@ namespace string_calculator
                 var delimiterAndStringNumbers = GetDelimiterAndStringNumbersForCustomDelimiterPattern(input);
                 delimiter = GetDelimiterForCustomDelimiterPattern(delimiterAndStringNumbers);
                 stringNumbers = GetStringNumbersForCustomDelimiterPattern(delimiterAndStringNumbers);
-            }
-            else
-            {
-                delimiter = ",";
             }
             var sum = SplitMultipleStringNumbersToCalculateSum(delimiter, stringNumbers);
             return sum;
