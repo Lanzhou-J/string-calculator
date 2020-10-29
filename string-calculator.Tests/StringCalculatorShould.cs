@@ -95,25 +95,21 @@ namespace string_calculator.Tests
         [InlineData("//[,,,]\n1,,,2,,,3", 6)]
         [InlineData("//[@@@]\n1@@@2@@@3", 6)]
         [InlineData("//[###]\n1###2###3", 6)]
-        // [InlineData("//[$$$$$]\n1$$$$$2$$$$$3", 6)]
+        [InlineData("//[$$$$$]\n1$$$$$2$$$$$3", 6)]
         
         public void ReturnCorrectSum_WhenDelimitersContainMultipleSymbols(string input, int expectedOutput)
         {
-            var calculator = new StringCalculator();
- 
             var result = StringCalculator.Add(input);
  
             Assert.Equal(expectedOutput, result);
         }
         
-        // [Fact]
-        // public void ReturnCorrectSum_WhenThereAreMultipleDelimiters()
-        // {
-        //     var calculator = new StringCalculator();
-        //
-        //     var result = calculator.Add("//[*][%]\n1*2%3");
-        //
-        //     Assert.Equal(6, result);
-        // }
+        [Fact]
+        public void ReturnCorrectSum_WhenThereAreMultipleDelimiters()
+        {
+            var result = StringCalculator.Add("//[*][%]\n1*2%3");
+        
+            Assert.Equal(6, result);
+        }
     }
 }

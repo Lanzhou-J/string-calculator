@@ -7,7 +7,7 @@ namespace string_calculator
     public class StringCalculator
     {
         private const string CustomDelimiterPattern = @"^\/\/(\D+?)(\n)"; //Input: "//;\n1;2"
-        private const string DelimiterPatternOfAnyLength = @"^\/\/(\[)(\D+?)(\])(\n)";//Input: "//[***]\n1***2***3"
+        private const string CustomDelimiterPatternOfAnyLength = @"^\/\/(\[)(\D+?)(\])(\n)";//Input: "//[***]\n1***2***3"
         private const string SingleNumberPattern = @"^(\d+)$";
         private const string NegativeValuePattern = @"-(\d+)";
         private const string ErrorMessage = "Negatives not allowed:";
@@ -18,7 +18,7 @@ namespace string_calculator
             CheckNegativeNumbers(input);
             var delimiter = ",";
             var stringNumbers = input;
-            int sum = 0;
+            var sum = 0;
             
             // Input: "//[***]\n1***2***3"
             if (HasDelimiterPatternOfAnyLength(input))
@@ -38,6 +38,7 @@ namespace string_calculator
                 sum = GetSingleNumberValue(stringNumbers);
                 return sum;
             }
+            
             if(MatchesMultipleNumberPattern(stringNumbers, delimiter))
             {
                 sum = GetSumForMultipleStringNumbers(stringNumbers, delimiter);
@@ -48,7 +49,7 @@ namespace string_calculator
 
         private static int GetSumForMultipleStringNumbers(string stringNumbers, string delimiter)
         {
-            int sum = 0;
+            var sum = 0;
             var stringNumberArray = stringNumbers.Split(new[] {delimiter, LineBreak}, StringSplitOptions.None);
             foreach (var item in stringNumberArray)
             {
@@ -58,7 +59,6 @@ namespace string_calculator
                     sum += number;
                 }
             }
-
             return sum;
         }
 
@@ -95,7 +95,7 @@ namespace string_calculator
 
         private static bool HasDelimiterPatternOfAnyLength(string input)
         {
-            return Regex.IsMatch(input, DelimiterPatternOfAnyLength);
+            return Regex.IsMatch(input, CustomDelimiterPatternOfAnyLength);
         }
 
         private static string GetDelimiterForDelimiterPatternOfAnyLength(string input)
@@ -109,7 +109,6 @@ namespace string_calculator
         
         private static string GetStringNumbersForDelimiterPatternOfAnyLength(string input)
         {
-            
             var stringNumbers = GetDelimiterAndStringNumbers(input)[1];
             return stringNumbers;
         }
@@ -126,6 +125,11 @@ namespace string_calculator
             if (delimiter.Contains("*"))
             {
                 newDelimiter = delimiter.Replace("*", @"\*");
+            }
+
+            if (delimiter.Contains("$"))
+            {
+                newDelimiter = delimiter.Replace("$", @"\$");
             }
 
             var delimiterPattern = $@"{newDelimiter}|\n";
