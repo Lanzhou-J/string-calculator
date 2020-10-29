@@ -6,8 +6,8 @@ namespace string_calculator
 {
     public class StringCalculator
     {
-        private const string CustomDelimiterPattern = @"^\/\/(\D+?)(\n)"; //"//;\n1;2"
-        private const string DelimiterPatternOfAnyLength = @"^\/\/(\[)(\D+?)(\])(\n)";//"//[***]\n1***2***3"
+        private const string CustomDelimiterPattern = @"^\/\/(\D+?)(\n)"; //Input: "//;\n1;2"
+        private const string DelimiterPatternOfAnyLength = @"^\/\/(\[)(\D+?)(\])(\n)";//Input: "//[***]\n1***2***3"
         private const string SingleNumberPattern = @"^(\d+)$";
         private const string NegativeValuePattern = @"-(\d+)";
         private const string ErrorMessage = "Negatives not allowed:";
@@ -15,9 +15,11 @@ namespace string_calculator
         
         public static int Add(string input)
         {
+            CheckNegativeNumbers(input);
             var delimiter = ",";
             var stringNumbers = input;
-            CheckNegativeNumbers(stringNumbers);
+            int sum = 0;
+            
             // Input: "//[***]\n1***2***3"
             if (HasDelimiterPatternOfAnyLength(input))
             {
@@ -31,8 +33,44 @@ namespace string_calculator
                 stringNumbers = GetStringNumbersForCustomDelimiterPattern(delimiterAndStringNumbers);
             }
             
-            var sum = SplitMultipleStringNumbersToCalculateSum(delimiter, stringNumbers);
+            if (MatchesSingleNumberPattern(stringNumbers))
+            {
+                sum = GetSingleNumberValue(stringNumbers);
+                return sum;
+            }
+            if(MatchesMultipleNumberPattern(stringNumbers, delimiter))
+            {
+                sum = GetSumForMultipleStringNumbers(stringNumbers, delimiter);
+                return sum;
+            }
             return sum;
+        }
+
+        private static int GetSumForMultipleStringNumbers(string stringNumbers, string delimiter)
+        {
+            int sum = 0;
+            var stringNumberArray = stringNumbers.Split(new[] {delimiter, LineBreak}, StringSplitOptions.None);
+            foreach (var item in stringNumberArray)
+            {
+                var number = int.Parse(item);
+                if (number < 1000)
+                {
+                    sum += number;
+                }
+            }
+
+            return sum;
+        }
+
+        private static bool MatchesMultipleNumberPattern(string stringNumbers, string delimiter)
+        {
+            var multipleNumberPattern = GetMultipleNumberPattern(delimiter);
+            return Regex.IsMatch(stringNumbers, multipleNumberPattern);
+        }
+
+        private static int GetSingleNumberValue(string stringNumbers)
+        {
+            return int.Parse(stringNumbers);
         }
 
         private static string[] GetDelimiterAndStringNumbers(string input)
@@ -76,34 +114,9 @@ namespace string_calculator
             return stringNumbers;
         }
 
-
-
-        private static int SplitMultipleStringNumbersToCalculateSum(string delimiter, string stringNumber)
+        private static bool MatchesSingleNumberPattern(string stringNumber)
         {
-            
-            var multipleNumberPattern = GetMultipleNumberPattern(delimiter);
-            
-            if (Regex.IsMatch(stringNumber, SingleNumberPattern))
-            {
-                return int.Parse(stringNumber);
-            }
-            else if(Regex.IsMatch(stringNumber, multipleNumberPattern))
-            {
-                var stringNumberArray = stringNumber.Split(new[] {delimiter , LineBreak }, StringSplitOptions.None);
-                var sum = 0;
-                foreach (var item in stringNumberArray)
-                {
-                    var number = int.Parse(item);
-                    if (number<1000)
-                    {
-                        sum += number;
-                    }
-                }
-
-                return sum;
-            }
-
-            return 0;
+            return Regex.IsMatch(stringNumber, SingleNumberPattern);
         }
 
         private static string GetMultipleNumberPattern(string delimiter)

@@ -42,6 +42,14 @@ namespace string_calculator.Tests
             Assert.Equal(expectedResult,StringCalculator.Add(input));
         }
         
+        [Theory]
+        [InlineData("//;\n1", 1)]
+        public void ReturnCorrectSumWhileSupportingDifferentDelimiters_SingleNumber(string input, int expectedResult)
+        {
+            var calculator = new StringCalculator();
+            Assert.Equal(expectedResult,StringCalculator.Add(input));
+        }
+        
         [Fact]
         public void ReturnCorrectMessage_WhenAddingANegativeNumber()
         {
